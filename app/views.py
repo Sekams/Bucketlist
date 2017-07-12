@@ -1,14 +1,25 @@
-from flask import render_template
-
+from flask import Flask, flash, redirect, render_template, request, session, abort
 from app import app
+from app.models.user import User
+
+current_user = User()
 
 @app.route('/')
-def login():
-    return render_template("login.html")
-
-@app.route('/home')
 def home():
-    return render_template("home.html")
+    if not session.get('logged_in'):
+        return render_template("login.html")
+    else:
+        return render_template("home.html")
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.form['password'] == 'duff' and request.form['username'] == 'homer':
+        session['logged_in'] = True
+    else:
+        flash('Invalid username or password!')
+    return home()
+
 
 @app.route('/signup')
 def sign_up():
