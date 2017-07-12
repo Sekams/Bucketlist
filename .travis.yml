@@ -3,7 +3,9 @@ language: python
 python:
   - 3.6.1
 
-cache: pip
+install: 
+  - pip install -r requirements.txt
+  - pip install coveralls
 
 env:
   CODECLIMATE_REPO_TOKEN: c2afd767880991b639578b05a3b212e85f66737c0b0ba1fe38c44a82883affae
