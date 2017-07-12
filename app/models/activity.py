@@ -12,7 +12,7 @@ class Activity(object):
         """This method changes the status in the Activity instance"""
         self.status = status
         return self.status
-      
+
     def rename(self, name):
         """This method renames the Activity instance"""
         self.name = name

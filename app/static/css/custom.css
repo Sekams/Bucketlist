@@ -134,13 +134,13 @@ body, html {
     margin-right: 20px;
 }
 
-.activity-element, {
+.activity-element {
     float: left;
     width: 100%
 }
 
 .btn-fab{
-    position: fixed !important;
+    position: fixed;
     right: 20px;
     bottom: 20px;
 }

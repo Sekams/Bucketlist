@@ -1,8 +1,5 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 from app import app
-from app.models.user import User
-
-current_user = User()
 
 @app.route('/')
 def home():
@@ -12,7 +9,7 @@ def home():
         return render_template("home.html")
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.form['password'] == 'duff' and request.form['username'] == 'homer':
         session['logged_in'] = True
