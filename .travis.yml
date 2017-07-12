@@ -1,0 +1,15 @@
+language: python
+
+python:
+  - 3.6.1
+
+cache: pip
+
+env:
+  CODECLIMATE_REPO_TOKEN: c2afd767880991b639578b05a3b212e85f66737c0b0ba1fe38c44a82883affae
+
+script:
+  - nosetests --with-coverage --cover-package=app
+
+after_success:
+  - coveralls
