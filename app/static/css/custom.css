@@ -7,17 +7,32 @@ body, html {
 
 }
 
+.card-modal {
+    position: fixed;
+    left: 30%;
+    right: 30%;
+}
+
 .card {
-    background-color: rgba(94, 99, 255, 0.51);
+    background-color: rgba(94, 99, 255, 1)!important;
     border-radius: 8px;
     color: #fff;
     max-width: 350px;
     margin: auto;
     padding: 30px;
+    z-index: 2;
+}
+
+.black-overlay{
+  background:rgba(0, 0, 0, 0.75);
 }
 
 .title{
     text-align: center;
+}
+
+.crud-title{
+    margin-bottom: 14%;
 }
 
 .register-card {
@@ -26,6 +41,11 @@ body, html {
 
 .login-card{
     min-height: 315px;
+}
+
+.crud-card {
+    min-height: 260px;
+    z-index: 2;
 }
 
 .register-card .title {
@@ -96,6 +116,7 @@ body, html {
     padding: 20px;
     max-width: 48%;
     height: 100%;
+    z-index: 1;
     border: 3px solid #303030;
     border-radius: 10px
 }

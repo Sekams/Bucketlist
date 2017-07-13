@@ -9,6 +9,8 @@
     <link href="../static/css/bootstrap.css" rel="stylesheet" />
     <link href="../static/css/custom.css" rel="stylesheet" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -36,154 +38,76 @@
 
     <div class="wrapper">
         <div class="home-wrapper">
-            <div class="card-container">
 
-                <h4>Trip to Rio</h4>
+            {% for key, value in bucketlists.items() %}
 
-                <div class="card-icon-holder">
-                    <i class="icons fa-plus-circle"></i>
+                <div class="card-container">
 
-                    <i class="icons fa-pencil"></i>
+                    <h4>{{ value.title }}</h4>
 
-                    <i class="icons fa-share-alt"></i>
+                    <a class="card-icon-holder">
+                        <a href=""><i class="icons fa-plus-circle"></i></a>
 
-                    <i class="icons fa-trash"></i>
+                        <a onclick="addInputToForm('{{ value.title }}', 'form_edit_bucketlist'), hideShowCrud('crud-edit-div')" ><i class="icons fa-pencil"></i></a>
+
+                        <a href=""> <i class="icons fa-share-alt"></i></a></a>
+
+                        <a href=""><i class="icons fa-trash"></i></a>
+
+                    {% if value.activities %}
+                        {% for activity in value.activities %}
+                            <div class="list-card">
+                                <h5 style="float:left">{{activity.name}}</h5>
+                                <input style="float: right; margin-left: 20px;" type="checkbox" value="" id="checkbox"+{{ loop.index }} data-toggle="checkbox">
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
                 </div>
 
-                <div class="list-card">
-                    <h5 style="float:left">Visit Christ The Redeemer statue</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Naked walk on Rio beach</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Swim with the dolphins</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Go scuba diving on the ocean</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-            </div>
-
-            <div class="card-container">
-
-                <h4>Trip to Rio</h4>
-
-                <div class="card-icon-holder">
-                    <i class="icons fa-plus-circle"></i>
-
-                    <i class="icons fa-pencil"></i>
-
-                    <i class="icons fa-share-alt"></i>
-
-                    <i class="icons fa-trash"></i>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Visit Christ The Redeemer statue</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Naked walk on Rio beach</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Swim with the dolphins</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Go scuba diving on the ocean</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-            </div>
-
-            <div class="card-container">
-
-                <h4>Trip to Rio</h4>
-
-                <div class="card-icon-holder">
-                    <i class="icons fa-plus-circle"></i>
-
-                    <i class="icons fa-pencil"></i>
-
-                    <i class="icons fa-share-alt"></i>
-
-                    <i class="icons fa-trash"></i>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Visit Christ The Redeemer statue</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Naked walk on Rio beach</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                        <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                    </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Swim with the dolphins</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Go scuba diving on the ocean</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-            </div>
+            {% endfor %}
 
         </div>
     </div>
 
-    <a class="btn-fab round-button"><i class="fab-icon fa-plus"></i></a>
+    <div class="crud-container card-modal" id="crud-div" style="display: none">
+        <div class="card crud-card drop-shadow">
+            <h3 class="title crud-title">Create Bucket List</h3>
+            <form action="/add_bucketlist" method="post" class="register-form">
+                <input name="title" type="text" class="form-control" placeholder="Enter Title">
+                <button class="btn btn-form-submit" type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="crud-container card-modal" id="crud-edit-div" style="display: none">
+        <div class="card crud-card drop-shadow">
+            <h3 class="title crud-title">Edit Bucket List</h3>
+            <form action="/edit_bucketlist" method="post" class="register-form" id="form_edit_bucketlist">
+                <input name="new_title" type="text" class="form-control" placeholder="Enter New Title">
+                <button class="btn btn-form-submit" type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <a class="btn-fab round-button" onclick="hideShowCrud('crud-div')"><i class="fab-icon fa-plus"></i></a>
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function hideShowCrud(crud_id) {
+        var my_div = document.getElementById(crud_id);
+        if (my_div.style.display === 'none') {
+            my_div.style.display = 'block';
+        } else {
+            my_div.style.display = 'none';
+        }
+    }
+
+    function addInputToForm(input_name, form_id) {
+        document.getElementById(form_id).innerHTML='<input type="text" name="old_title" value='+input_name+' style="display: none" >'
+        + '<input name="new_title" type="text" class="form-control" placeholder="Enter New Title">'
+        + '<button class="btn btn-form-submit" type="submit">Save</button>';
+    }
+</script>
