@@ -45,4 +45,4 @@ class User(object):
         self.sharing_pool.add_activity(self.username, activity)
         return self.sharing_pool.activities
 
-    
+
