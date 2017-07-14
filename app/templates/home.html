@@ -2,11 +2,15 @@
 <html lang="en">
 
 <head>
-    <title>Home | BucketList</title>
+    {% block title %}
+	    Home | BucketList
+    {% endblock %}
 
     <link href="../static/css/bootstrap.css" rel="stylesheet" />
     <link href="../static/css/custom.css" rel="stylesheet" />
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -19,13 +23,14 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="#" class="navbar-link"><i class="nav-icons fa-bell-o"></i></a>
+                        <a onclick="showNotifications()" class="navbar-link"><i class="nav-icons fa-bell-o"></i><p style="position: absolute; margin-top: -22px; margin-left: 21px;">({{ shares }})</p></a>
+
                     </li>
                     <li>
-                        <a href="#" class="navbar-link">Account</a>
+                        <a href="#" class="navbar-link">Hi {{session.get('first_name')}}!</a>
                     </li>
                     <li>
-                        <a href="#" class="navbar-link">Logout</a>
+                        <a href="{{url_for('logout')}}" class="navbar-link">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -34,154 +39,155 @@
 
     <div class="wrapper">
         <div class="home-wrapper">
-            <div class="card-container">
 
-                <h4>Trip to Rio</h4>
+            {% for bucketlist in bucketlists %}
 
-                <div class="card-icon-holder">
-                    <i class="icons fa-plus-circle"></i>
+                <div id="card-bucket{{ loop.index }}" class="card-container">
 
-                    <i class="icons fa-pencil"></i>
+                    <h4>{{ bucketlist.title }}</h4>
 
-                    <i class="icons fa-share-alt"></i>
+                    <div class="card-icon-holder" id="card-icon-holder{{ loop.index }}">
+                        <a id="add-activity{{ loop.index }}" onclick="generateModal('crud-div', 'Create Activity', '/add_bucket_activity', 'form_add_bucketlist_id', 'name', 'Enter Activity Name', 'select_age_id', 'bucket_title', '{{ bucketlist.title }}')">
+                            <i class="icons fa-plus-circle"></i>
+                        </a>
 
-                    <i class="icons fa-trash"></i>
+                        <a id="edit-bucket{{ loop.index }}" onclick="generateModal('crud-div', 'Edit Bucket List', '/edit_bucketlist', 'form_edit_bucketlist', 'new_title', 'Enter New Title', '', 'old_title', '{{ bucketlist.title }}')"
+                        >
+                            <i class="icons fa-pencil"></i>
+                        </a>
+
+                        <a id="share-bucket{{ loop.index }}" href="{{ url_for('share_bucketlist', title=bucketlist.title ) }}"> <i class="icons fa-share-alt"></i></a>
+
+                        <a id="delete-bucket{{ loop.index }}" href="{{ url_for('remove_bucketlist', title=bucketlist.title ) }}"><i class="icons fa-trash"></i></a>
+                    </div>
+
+                    <div style="overflow-y: auto;height: 360px;padding: 8px;">
+                        {% if activities %}
+                            {% for bucketlist_title, the_activities in activities.items() %}
+                                {% if bucketlist_title == bucketlist.title %}
+                                    {% for activity in the_activities %}
+                                        <div id="card-activity{{ loop.index }}" class="list-card">
+                                            <div id="label-activity{{ loop.index }}" >
+                                                <div>
+                                                    <div>
+                                                        <h4>{{ activity.name }}</h4>
+                                                    </div>
+                                                    {% set the_age = age | int %}
+                                                    {% set the_target_age = activity.target_age | int %}
+                                                    {% set difference = the_target_age - the_age %}
+                                                    <div>
+                                                        <h6>In {{difference}} year{% if difference > 1 %}s{% endif %}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input id="checkbox-activity{{ loop.index }}" style="float: right;margin-top: -36px;margin-bottom: 5px;" type="checkbox" value="{{ activity.status }}" id="checkbox{{ loop.index }}" data-toggle="checkbox">
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
                 </div>
 
-                <div class="list-card">
-                    <h5 style="float:left">Visit Christ The Redeemer statue</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Naked walk on Rio beach</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Swim with the dolphins</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Go scuba diving on the ocean</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-            </div>
-
-            <div class="card-container">
-
-                <h4>Trip to Rio</h4>
-
-                <div class="card-icon-holder">
-                    <i class="icons fa-plus-circle"></i>
-
-                    <i class="icons fa-pencil"></i>
-
-                    <i class="icons fa-share-alt"></i>
-
-                    <i class="icons fa-trash"></i>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Visit Christ The Redeemer statue</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Naked walk on Rio beach</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Swim with the dolphins</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Go scuba diving on the ocean</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-            </div>
-
-            <div class="card-container">
-
-                <h4>Trip to Rio</h4>
-
-                <div class="card-icon-holder">
-                    <i class="icons fa-plus-circle"></i>
-
-                    <i class="icons fa-pencil"></i>
-
-                    <i class="icons fa-share-alt"></i>
-
-                    <i class="icons fa-trash"></i>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Visit Christ The Redeemer statue</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Naked walk on Rio beach</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Swim with the dolphins</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-                <div class="list-card">
-                    <h5 style="float:left">Go scuba diving on the ocean</h5>
-
-                    <label style="float: right; margin-left: 20px;" class="checkbox" for="checkbox1" style="float: left">
-                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
-                        </label>
-                </div>
-
-            </div>
+            {% endfor %}
 
         </div>
     </div>
 
-    <a class="btn-fab round-button"><i class="fab-icon fa-plus"></i></a>
+    <div class="crud-container card-modal" id="crud-div" style="display: none">
+    </div>
+
+    <div class="crud-container notif-card-modal" id="notif-div" style="display: none">
+        <div class="notif-card crud-card drop-shadow">
+            <span id="close-notif" class="close">&times;</span>
+            <h4>Shared BucketLists</h4>
+            {% for key, value in sharing_pool_bucketlists.items() %}
+                <h5> <strong>@{{key}}</strong> shared the bucketlists below:</h5>
+                {% for bucket in value %}
+                    <h6>    - {{bucket.title}}</h6>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <a class="btn-fab round-button" onclick="generateModal('crud-div', 'Create Bucket List', '/add_bucketlist', 'form_add_bucketlist', 'title', 'Enter Title', '', '', '')">
+        <i class="fab-icon fa-plus"></i>
+    </a>
 </body>
 
 </html>
+
+<script type="text/javascript">
+
+    function generateModal(parent_id, modal_title, action, form_id, visible_input_name, visible_input_placeholder, select_id, hidden_input_name, hidden_input_value) {
+
+        var select = '', hidden_input = '';
+        if (!(select_id === "")){
+            select = 'By age: <select name="target_age" id='+select_id+' class="form-control" ></select>';
+        }
+        if (!(hidden_input_name === "") && !(hidden_input_value === "")) {
+            hidden_input = '<input type="text" name="'+hidden_input_name+'" value="'+hidden_input_value+'" style="display: none" >'
+        }
+        document.getElementById(parent_id).innerHTML=''
+            + '<div class="card crud-card drop-shadow">'
+            + '    <span class="close">&times;</span>'
+            + '    <h3 class="title crud-title">'+modal_title+'</h3>'
+            + '    <form action="'+action+'" method="post" class="register-form" id="'+form_id+'">'
+            + '        ' +hidden_input
+            + '        <input name="'+visible_input_name+'" type="text" class="form-control" placeholder="'+visible_input_placeholder+'">'
+            + '        ' +select
+            + '        <button class="btn btn-form-submit" type="submit">Save</button>'
+            + '    </form>'
+            + '</div>';
+
+        if (!(select_id === "")){
+            var min = 12,
+            max = 100,
+            select = document.getElementById(select_id);
+
+            for (var i = min; i<=max; i++){
+                var opt = document.createElement('option');
+                opt.value = i;
+                opt.innerHTML = i;
+                select.appendChild(opt);
+            }
+        }
+
+        var modal = document.getElementById(parent_id);
+
+        var span = document.getElementsByClassName("close")[0];
+
+        modal.style.display = "block";
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+    }
+    function showNotifications() {
+        var notif = document.getElementById('notif-div');
+        var cancel = document.getElementById('close-notif');
+        notif.style.display = "block";
+        cancel.onclick = function() {
+            notif.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == notif) {
+                notif.style.display = "none";
+            }
+        }
+    }
+
+    function addInputToForm(input_name, form_id) {
+        document.getElementById(form_id).innerHTML='<input type="text" name="old_title" value='+input_name+' style="display: none" >'
+        + '<input name="new_title" type="text" class="form-control" placeholder="Enter New Title">'
+        + '<button class="btn btn-form-submit" type="submit">Save</button>';
+    }
+</script>

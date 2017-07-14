@@ -1,6 +1,7 @@
 click==6.7
 coverage==4.4.1
 Flask==0.12.2
+Flask-Login==0.4.0
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0

@@ -22,4 +22,3 @@ class BucketList(object):
         self.title = title
         return self.title
 
- 
