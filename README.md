@@ -9,7 +9,7 @@
 
 
 ## Technologies
-1. Python 2.7
+1. Python 3.6.1
 2. click==6.7
 3. coverage==4.4.1
 4. Flask==0.12.2
