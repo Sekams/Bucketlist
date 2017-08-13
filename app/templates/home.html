@@ -2,10 +2,8 @@
 <html lang="en">
 
 <head>
-    {% block title %}
-	    Home | BucketList
-    {% endblock %}
-
+    <title>Home | BucketList</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href="../static/css/custom.css" rel="stylesheet" />
@@ -24,7 +22,12 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a onclick="showNotifications()" class="navbar-link"><i class="nav-icons fa-bell-o"></i><p style="position: absolute; margin-top: -22px; margin-left: 21px;">({{ shares }})</p></a>
+                        <a onclick="showNotifications()" class="navbar-link"><i class="nav-icons fa-bell-o"></i>
+                            {% if shares > 0 %}({{ shares }}){% endif %}
+                            <!--<p style="position: absolute; margin-top: -22px; margin-left: 21px;">-->
+                                <!--&lt;!&ndash;{% if shares > 0 %}({{ shares }}){% endif %}&ndash;&gt;-->
+                            <!--</p>-->
+                        </a>
 
                     </li>
                     <li>
@@ -48,11 +51,11 @@
                     <h4>{{ bucketlist.title }}</h4>
 
                     <div class="card-icon-holder" id="card-icon-holder{{ loop.index }}">
-                        <a id="add-activity{{ loop.index }}" onclick="generateModal('crud-div', 'Create Activity', '/add_bucket_activity', 'form_add_bucketlist_id', 'name', 'Enter Activity Name', 'select_age_id', 'bucket_title', '{{ bucketlist.title }}')">
+                        <a id="add-activity{{ loop.index }}" onclick="generateModal('crud-div', 'Create Activity', '/add_bucket_activity', 'form_add_bucketlist_id', 'name', 'Enter Activity Name', 'select_age_id', 'bucket_title', '{{ bucketlist.title }}', '')">
                             <i class="icons fa-plus-circle"></i>
                         </a>
 
-                        <a id="edit-bucket{{ loop.index }}" onclick="generateModal('crud-div', 'Edit Bucket List', '/edit_bucketlist', 'form_edit_bucketlist', 'new_title', 'Enter New Title', '', 'old_title', '{{ bucketlist.title }}')"
+                        <a id="edit-bucket{{ loop.index }}" onclick="generateModal('crud-div', 'Edit Bucket List', '/edit_bucketlist', 'form_edit_bucketlist', 'new_title', 'Enter New Title', '', 'old_title', '{{ bucketlist.title }}', '')"
                         >
                             <i class="icons fa-pencil"></i>
                         </a>
@@ -67,22 +70,34 @@
                             {% for bucketlist_title, the_activities in activities.items() %}
                                 {% if bucketlist_title == bucketlist.title %}
                                     {% for activity in the_activities %}
-                                        <div id="card-activity{{ loop.index }}" class="list-card">
-                                            <div id="label-activity{{ loop.index }}" >
-                                                <div>
+                                            <div id="card-activity{{ loop.index }}" class="list-card">
+                                                <div id="label-activity{{ loop.index }}" >
                                                     <div>
-                                                        <h4>{{ activity.name }}</h4>
-                                                    </div>
-                                                    {% set the_age = age | int %}
-                                                    {% set the_target_age = activity.target_age | int %}
-                                                    {% set difference = the_target_age - the_age %}
-                                                    <div>
-                                                        <h6>In {{difference}} year{% if difference > 1 %}s{% endif %}</h6>
+                                                        <a onclick="generateModal('crud-div', 'Edit {{ activity.name }} Activity', '/edit_activity', 'form_edit_activity', 'new_name', 'Enter New Name', 'select_age_id', 'bucket_title', '{{ bucketlist_title }}', '{{ activity.name }}')">
+                                                            <div>
+                                                                <h4>{{ activity.name }}</h4>
+                                                            </div>
+                                                            {% set the_age = age | int %}
+                                                            {% set the_target_age = activity.target_age | int %}
+                                                            {% set difference = the_target_age - the_age %}
+                                                            <div>
+                                                                <h6>
+                                                                    {% if difference < 0 %}
+                                                                        Should have been done {{difference|abs}} year{% if difference < -1 %}s{% endif %} ago
+                                                                    {% elif difference > 0 %}
+                                                                        In {{difference}} year{% if difference > 1 %}s{% endif %}
+                                                                    {% elif difference == 0 %}
+                                                                        Should be done this year
+                                                                    {% endif %}
+
+                                                                </h6>
+                                                            </div>
+                                                        </a>
                                                     </div>
                                                 </div>
+                                                <input id="checkbox-activity{{ loop.index }}" style="float: right;margin-top: -36px;margin-bottom: 5px;" type="checkbox" value="{{ activity.status }}" id="checkbox{{ loop.index }}" data-toggle="checkbox">
+
                                             </div>
-                                            <input id="checkbox-activity{{ loop.index }}" style="float: right;margin-top: -36px;margin-bottom: 5px;" type="checkbox" value="{{ activity.status }}" id="checkbox{{ loop.index }}" data-toggle="checkbox">
-                                        </div>
                                     {% endfor %}
                                 {% endif %}
                             {% endfor %}
@@ -112,7 +127,7 @@
         </div>
     </div>
 
-    <a class="btn-fab round-button" onclick="generateModal('crud-div', 'Create Bucket List', '/add_bucketlist', 'form_add_bucketlist', 'title', 'Enter Title', '', '', '')">
+    <a class="btn-fab round-button" onclick="generateModal('crud-div', 'Create Bucket List', '/add_bucketlist', 'form_add_bucketlist', 'title', 'Enter Title', '', '', '', '')">
         <i class="fab-icon fa-plus"></i>
     </a>
 </body>
@@ -121,14 +136,26 @@
 
 <script type="text/javascript">
 
-    function generateModal(parent_id, modal_title, action, form_id, visible_input_name, visible_input_placeholder, select_id, hidden_input_name, hidden_input_value) {
+    function generateModal(parent_id, modal_title, action, form_id, visible_input_name, visible_input_placeholder, select_id, hidden_input_name, hidden_input_value, edit_activity) {
 
-        var select = '', hidden_input = '';
+        var select = '', hidden_input = '', buttons = '<button class="btn btn-form-submit" type="submit">Save</button>';
         if (!(select_id === "")){
             select = 'By age: <select name="target_age" id='+select_id+' class="form-control" ></select>';
         }
         if (!(hidden_input_name === "") && !(hidden_input_value === "")) {
             hidden_input = '<input type="text" name="'+hidden_input_name+'" value="'+hidden_input_value+'" style="display: none" >'
+        }
+        if (!(edit_activity === "")) {
+            buttons = ''
+                + '<input type="text" name="old_name" value="'+edit_activity+'" style="display: none" >'
+                + '<div style="text-align: center; margin-top: 5%">'
+                + '    <div style="display: inline-block; text-align: center; width: 45%;">'
+                + '        <a href="/remove_activity?bucket_title='+hidden_input_value+'&name='+edit_activity+'" class="btn button btn-delete" style="display: inline-block; margin-left: 0%; margin-top: 15%; width: 80%;">Delete</a>'
+                + '    </div>'
+                + '    <div style="display: inline-block; text-align: center;  width: 45%;">'
+                + '        <button class="btn btn-form-submit" style="display: inline-block; margin-left: 0%; width: 80%;" type="submit">Save</button>'
+                + '    </div>'
+                + '</div>';
         }
         document.getElementById(parent_id).innerHTML=''
             + '<div class="card crud-card drop-shadow">'
@@ -136,9 +163,9 @@
             + '    <h3 class="title crud-title">'+modal_title+'</h3>'
             + '    <form action="'+action+'" method="post" class="register-form" id="'+form_id+'">'
             + '        ' +hidden_input
-            + '        <input name="'+visible_input_name+'" type="text" class="form-control" placeholder="'+visible_input_placeholder+'">'
+            + '        <input id="visible_input" name="'+visible_input_name+'" type="text" class="form-control" placeholder="'+visible_input_placeholder+'">'
             + '        ' +select
-            + '        <button class="btn btn-form-submit" type="submit">Save</button>'
+            + '        ' +buttons
             + '    </form>'
             + '</div>';
 
@@ -190,5 +217,17 @@
         document.getElementById(form_id).innerHTML='<input type="text" name="old_title" value='+input_name+' style="display: none" >'
         + '<input name="new_title" type="text" class="form-control" placeholder="Enter New Title">'
         + '<button class="btn btn-form-submit" type="submit">Save</button>';
+    }
+
+    function quoteattr(s, preserveCR) {
+        preserveCR = preserveCR ? '&#13;' : '\n';
+        return ('' + s)
+            .replace(/&/g, '&amp;')
+            .replace(/'/g, '&apos;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\r\n/g, preserveCR)
+            .replace(/[\r\n]/g, preserveCR);
     }
 </script>
