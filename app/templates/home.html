@@ -95,7 +95,7 @@
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <input id="checkbox-activity{{ loop.index }}" style="float: right;margin-top: -36px;margin-bottom: 5px;" type="checkbox" value="{{ activity.status }}" id="checkbox{{ loop.index }}" data-toggle="checkbox">
+                                                <input id="checkbox-activity{{ loop.index }}" style="float: right;margin-top: -36px;margin-bottom: 5px;" type="checkbox" {% if activity.status %}checked{% endif %} onchange="changeActivityStatus('{{ bucketlist_title }}', '{{ activity.name }}', this);">
 
                                             </div>
                                     {% endfor %}
@@ -219,15 +219,7 @@
         + '<button class="btn btn-form-submit" type="submit">Save</button>';
     }
 
-    function quoteattr(s, preserveCR) {
-        preserveCR = preserveCR ? '&#13;' : '\n';
-        return ('' + s)
-            .replace(/&/g, '&amp;')
-            .replace(/'/g, '&apos;')
-            .replace(/"/g, '&quot;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/\r\n/g, preserveCR)
-            .replace(/[\r\n]/g, preserveCR);
+    function changeActivityStatus(bucket_title, name, check_box) {
+        window.location.href = "/complete_activity?bucket_title="+bucket_title+"&name="+name+"&status="+check_box.checked;
     }
 </script>

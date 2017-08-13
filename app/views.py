@@ -220,3 +220,18 @@ def remove_activity():
             del current_activities[bucket_title]
     return redirect(url_for('home'))
 
+
+@app.route("/complete_activity", methods=['GET'])
+def complete_activity():
+    bucket_title = request.args.get('bucket_title')
+    name = request.args.get('name')
+    status = request.args.get('status')
+    bool_status = False;
+    if status == "true":
+        bool_status = True;
+    activity_list1 = current_activities[bucket_title]
+    for activity1 in activity_list1:
+        if name == activity1.name:
+            activity1.change_status(bool_status)
+            break
+    return redirect(url_for('home'))
